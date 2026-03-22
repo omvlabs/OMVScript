@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
-export TERM=${TERM:-linux}
+export TERM=${TERM:-xterm-256color}
 # OmVScript: bootstrap installer - updated to include searchable app selection
 # Usage:
 #  curl -fsSL https://raw.githubusercontent.com/Omcodes23/OmVScript/main/install.sh -o /tmp/omvscript-install.sh
@@ -18,7 +18,8 @@ ensure_root(){
 fetch_module(){
   local path="$1"
   local url="${REPO_RAW_BASE}/${path}"
-  local out="${TMPDIR}/$(basename "$path")"
+  local out
+  out="${TMPDIR}/$(basename "$path")"
   log "Downloading module: $url"
   if ! curl -fsSL "$url" -o "$out"; then
     log "ERROR: failed to download $url"
@@ -32,8 +33,8 @@ run_module(){
   local module_path="$1"
   log "----- MODULE: $(basename "$module_path") -----"
   head -n 50 "$module_path" >> "$LOGFILE" || true
-  ( bash "$module_path" ) 2>&1 | tee -a "$LOGFILE"
-  return ${PIPESTATUS[0]:-0}
+   ( bash "$module_path" ) 2>&1 | tee -a "$LOGFILE"
+   return "${PIPESTATUS[0]:-0}"
 }
 
 ensure_root
@@ -43,7 +44,7 @@ if ! [ -t 0 ] && ! [ -t 2 ]; then
   exit 1
 fi
 
-if command -v whiptail >/dev/null 2>&1 && { [ -t 0 ] || [ -t 2 ]; }; then
+if command -v whiptail >/dev/null 2>&1 && [ -t 0 ]; then
   choice=$(whiptail --title "OmVScript" --menu "Choose action" 20 80 12 \
     "1" "Ensure Docker is installed (recommended first)" \
     "2" "Install Developer Environment (search & select packages)" \

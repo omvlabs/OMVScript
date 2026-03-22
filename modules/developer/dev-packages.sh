@@ -2,7 +2,7 @@
 set -euo pipefail
 export TERM=${TERM:-linux}
 LOGFILE="/var/log/omvscript.log"
-REPO_RAW_BASE="https://raw.githubusercontent.com/Omcodes23/OmVScript/main"
+# REPO_RAW_BASE="https://raw.githubusercontent.com/Omcodes23/OmVScript/main"
 log(){ echo "$(date --iso-8601=seconds) $*" | tee -a "$LOGFILE"; }
 
 detect_pkg_manager(){
@@ -88,6 +88,7 @@ interactive_dev_search(){
   fi
 
   eval "sel_arr=($sel)"
+  # shellcheck disable=SC2154
   for item in "${sel_arr[@]}"; do
     case "$item" in
       vscode)

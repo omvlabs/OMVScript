@@ -104,10 +104,11 @@ interactive_search_and_select(){
     selected=$(printf '"%s" ' "${seltags[@]}")
   fi
 
-  # selected is like: "nginx" "postgres"
-  # normalize into array
-  eval "sel_arr=($selected)"
-  for t in "${sel_arr[@]}"; do deploy_image "$t"; done
+   # selected is like: "nginx" "postgres"
+   # normalize into array
+   eval "sel_arr=($selected)"
+   # shellcheck disable=SC2154
+   for t in "${sel_arr[@]}"; do deploy_image "$t"; done
 }
 
 deploy_image(){

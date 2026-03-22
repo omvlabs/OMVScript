@@ -64,8 +64,9 @@ interactive_nas_search(){
     sel=$(printf '"%s" ' "${seltags[@]}")
   fi
 
-  eval "sel_arr=($sel)"
-  for item in "${sel_arr[@]}"; do
+   eval "sel_arr=($sel)"
+   # shellcheck disable=SC2154
+   for item in "${sel_arr[@]}"; do
     case "$item" in
       openmediavault)
         if command -v whiptail >/dev/null 2>&1 && [ -t 0 ]; then
@@ -87,6 +88,7 @@ interactive_nas_search(){
         # delegate to docker-images deployer
         tmp="$(mktemp)"
         curl -fsSL "${REPO_RAW_BASE}/modules/docker/docker-images.sh" -o "$tmp"
+        # shellcheck source=/dev/null
         . "$tmp"
         deploy_image "$item" || log "Failed to deploy $item"
         rm -f "$tmp"

@@ -89,6 +89,7 @@ interactive_server_search(){
 
   # call docker-images module for each selection
   eval "sel_arr=($sel)"
+  # shellcheck disable=SC2154
   for item in "${sel_arr[@]}"; do
     case "$item" in
       casaos)
@@ -127,6 +128,7 @@ interactive_server_search(){
         curl -fsSL "${REPO_RAW_BASE}/modules/docker/docker-images.sh" -o "$tmp"
         bash "$tmp" <<< "" >/dev/null 2>&1 || true
         # invoke deploy via docker-images by sourcing it
+        # shellcheck disable=SC1090
         . "$tmp"
         deploy_image "$item" || log "Failed to deploy $item"
         rm -f "$tmp"

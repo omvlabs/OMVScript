@@ -74,6 +74,7 @@ else
   log "Installing nvm for $RUN_USER..."
   su - "$RUN_USER" -c 'curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash' || \
     log "nvm install script failed."
+  # shellcheck disable=SC2016
   su - "$RUN_USER" -c 'export NVM_DIR="$HOME/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh" && nvm install --lts' || true
 fi
 
