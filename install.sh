@@ -3,10 +3,10 @@ set -euo pipefail
 export TERM=${TERM:-xterm-256color}
 # OmVScript: bootstrap installer - updated to include searchable app selection
 # Usage:
-#  curl -fsSL https://raw.githubusercontent.com/Omcodes23/OmVScript/main/install.sh -o /tmp/omvscript-install.sh
+#  curl -fsSL https://raw.githubusercontent.com/omvlabs/OmVScript/main/install.sh -o /tmp/omvscript-install.sh
 #  sudo bash /tmp/omvscript-install.sh
 
-REPO_RAW_BASE="https://raw.githubusercontent.com/Omcodes23/OmVScript/main"
+REPO_RAW_BASE="https://raw.githubusercontent.com/omvlabs/OmVScript/main"
 LOGFILE="/var/log/omvscript.log"
 TMPDIR="$(mktemp -d /tmp/omvscript.XXXX)"
 

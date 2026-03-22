@@ -2,7 +2,7 @@
 set -euo pipefail
 export TERM=${TERM:-linux}
 LOGFILE="/var/log/omvscript.log"
-# REPO_RAW_BASE="https://raw.githubusercontent.com/Omcodes23/OmVScript/main"
+# REPO_RAW_BASE="https://raw.githubusercontent.com/omvlabs/OmVScript/main"
 log(){ echo "$(date --iso-8601=seconds) $*" | tee -a "$LOGFILE"; }
 
 detect_pkg_manager(){
