@@ -31,7 +31,7 @@ filter_nas(){
 }
 
 interactive_nas_search(){
-  if command -v whiptail >/dev/null 2>&1 && [ -t 0 ]; then
+  if command -v whiptail >/dev/null 2>&1 && { [ -t 0 ] || [ -c /dev/tty ]; }; then
     q=$(whiptail --inputbox "Search NAS apps (openmediavault, minio...). Leave empty to list all." 10 60 "" 3>&1 1>&2 2>&3) || return 1
   else
     read -rp "Search NAS apps (empty=all): " q
