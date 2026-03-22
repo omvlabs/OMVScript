@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
+export TERM=${TERM:-xterm}
 # Generic Docker image deployer: choose from curated list or provide custom image
 LOGFILE="/var/log/omvscript.log"
 log(){ echo "$(date --iso-8601=seconds) $*" | tee -a "$LOGFILE"; }
@@ -43,7 +44,7 @@ filter_choices(){
 }
 
 choose_with_whiptail(){
-  if command -v whiptail >/dev/null 2>&1; then
+  if command -v whiptail >/dev/null 2>&1 && [ -t 0 ]; then
     whiptail "$@"
     return $?
   fi
@@ -52,7 +53,7 @@ choose_with_whiptail(){
 
 interactive_search_and_select(){
   # ask for search term
-  if command -v whiptail >/dev/null 2>&1; then
+  if command -v whiptail >/dev/null 2>&1 && [ -t 0 ]; then
     q=$(whiptail --inputbox "Search for Docker images (e.g. postgres, nginx, redis). Leave empty to list all." 10 60 "" 3>&1 1>&2 2>&3) || return 1
   else
     read -rp "Search for Docker images (leave empty for all): " q
@@ -63,7 +64,7 @@ interactive_search_and_select(){
   mapfile -t choices_arr < <(filter_choices "$q")
   if [ ${#choices_arr[@]} -eq 0 ]; then
     # no matches: offer full list to pick custom
-    if command -v whiptail >/dev/null 2>&1; then
+    if command -v whiptail >/dev/null 2>&1 && [ -t 0 ]; then
       whiptail --msgbox "No curated matches found for '$q'. You can provide a custom image name or try again." 10 60
     else
       echo "No curated matches for '$q'."
@@ -80,7 +81,7 @@ interactive_search_and_select(){
     checklist_args+=("$tag" "$label" "OFF")
   done
 
-  if command -v whiptail >/dev/null 2>&1; then
+  if command -v whiptail >/dev/null 2>&1 && [ -t 0 ]; then
     selected=$(whiptail --title "Select images to deploy" --checklist "Choose one or more images" 20 80 12 "${checklist_args[@]}" 3>&1 1>&2 2>&3) || return 1
   else
     # fallback: numbered terminal selection
@@ -133,7 +134,7 @@ deploy_image(){
   notes=$(echo "$found" | cut -d'|' -f4)
 
   # ask host port (default to default_port)
-  if command -v whiptail >/dev/null 2>&1; then
+  if command -v whiptail >/dev/null 2>&1 && [ -t 0 ]; then
     host_port=$(whiptail --inputbox "Choose host port to map for $short ($image). Default: $default_port. Leave empty to skip." 10 60 "$default_port" 3>&1 1>&2 2>&3) || return
   else
     read -rp "Host port to map for $short ($image) [default $default_port, empty=skip]: " host_port
@@ -162,7 +163,7 @@ deploy_image(){
   # special-case images needing env var password
   env_args=()
   if [ "$short" = "postgres" ]; then
-    if command -v whiptail >/dev/null 2>&1; then
+    if command -v whiptail >/dev/null 2>&1 && [ -t 0 ]; then
       pgpass=$(whiptail --passwordbox "Set POSTGRES_PASSWORD for postgres container (required):" 10 60 3>&1 1>&2 2>&3) || return
     else
       read -rsp "Set POSTGRES_PASSWORD (will not echo): " pgpass; echo
@@ -182,7 +183,7 @@ deploy_image(){
 
 prompt_custom_deploy(){
   image="$1"
-  if command -v whiptail >/dev/null 2>&1; then
+  if command -v whiptail >/dev/null 2>&1 && [ -t 0 ]; then
     host_port=$(whiptail --inputbox "Provide host:container port mapping for image $image (format host:container). Example: 8080:80" 10 60 "8080:80" 3>&1 1>&2 2>&3) || return
   else
     read -rp "Provide host:container port mapping for image $image (host:container): " host_port
@@ -214,7 +215,7 @@ main(){
   # keep offering until user cancels
   while true; do
     interactive_search_and_select || break
-    if command -v whiptail >/dev/null 2>&1; then
+    if command -v whiptail >/dev/null 2>&1 && [ -t 0 ]; then
       if ! whiptail --yesno "Deploy more images?" 8 50; then break; fi
     else
       read -rp "Deploy more images? [y/N]: " more

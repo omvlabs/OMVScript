@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
+export TERM=${TERM:-xterm}
 # OmVScript: bootstrap installer - updated to include searchable app selection
 # Usage:
 #  curl -fsSL https://raw.githubusercontent.com/Omcodes23/OmVScript/main/install.sh -o /tmp/omvscript-install.sh
@@ -37,7 +38,7 @@ run_module(){
 
 ensure_root
 
-if command -v whiptail >/dev/null 2>&1; then
+if command -v whiptail >/dev/null 2>&1 && [ -t 0 ]; then
   choice=$(whiptail --title "OmVScript" --menu "Choose action" 20 80 12 \
     "1" "Ensure Docker is installed (recommended first)" \
     "2" "Install Developer Environment (search & select packages)" \

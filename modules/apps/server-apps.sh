@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
+export TERM=${TERM:-xterm}
 # Server apps module — curated set of server applications; deploy via docker-images module
 LOGFILE="/var/log/omvscript.log"
 REPO_RAW_BASE="https://raw.githubusercontent.com/Omcodes23/OmVScript/main"
@@ -36,7 +37,7 @@ filter_server(){
 }
 
 choose_with_whiptail(){
-  if command -v whiptail >/dev/null 2>&1; then
+  if command -v whiptail >/dev/null 2>&1 && [ -t 0 ]; then
     whiptail "$@"
     return $?
   fi
@@ -44,14 +45,14 @@ choose_with_whiptail(){
 }
 
 interactive_server_search(){
-  if command -v whiptail >/dev/null 2>&1; then
+  if command -v whiptail >/dev/null 2>&1 && [ -t 0 ]; then
     q=$(whiptail --inputbox "Search server apps (e.g., nextcloud, gitea). Leave empty to list all." 10 60 "" 3>&1 1>&2 2>&3) || return 1
   else
     read -rp "Search server apps (empty=all): " q
   fi
   mapfile -t arr < <(filter_server "$q")
   if [ ${#arr[@]} -eq 0 ]; then
-    if command -v whiptail >/dev/null 2>&1; then
+    if command -v whiptail >/dev/null 2>&1 && [ -t 0 ]; then
       whiptail --msgbox "No matches found for '$q'." 8 50
     else
       echo "No matches for '$q'."
@@ -67,7 +68,7 @@ interactive_server_search(){
     checklist+=("$tag" "$label" "OFF")
   done
 
-  if command -v whiptail >/dev/null 2>&1; then
+  if command -v whiptail >/dev/null 2>&1 && [ -t 0 ]; then
     sel=$(whiptail --title "Select server apps" --checklist "Select one or more server apps to deploy (will call docker-images module)" 20 80 12 "${checklist[@]}" 3>&1 1>&2 2>&3) || return 1
   else
     echo "Matches:"
@@ -92,7 +93,7 @@ interactive_server_search(){
     case "$item" in
       casaos)
         # CasaOS has its official installer; we'll offer a safe automated docker-based approach
-        if command -v whiptail >/dev/null 2>&1; then
+        if command -v whiptail >/dev/null 2>&1 && [ -t 0 ]; then
           if whiptail --yesno "CasaOS official installer may perform advanced actions. Do you want OmVScript to attempt a Docker-based CasaOS install?" 12 80; then
             # CasaOS docker-compose quick deploy (lightweight)
             bash -c "curl -fsSL https://raw.githubusercontent.com/IceWhaleTech/CasaOS/main/install.sh | bash" || log "CasaOS install failed or user aborted."
@@ -105,7 +106,7 @@ interactive_server_search(){
         ;;
       homeassistant)
         log "Home Assistant is advanced; recommending official install: https://www.home-assistant.io/installation/"
-        if command -v whiptail >/dev/null 2>&1; then
+        if command -v whiptail >/dev/null 2>&1 && [ -t 0 ]; then
           whiptail --msgbox "Home Assistant recommended installation: https://www.home-assistant.io/installation/" 12 80
         else
           echo "See https://www.home-assistant.io/installation/"
@@ -113,7 +114,7 @@ interactive_server_search(){
         ;;
       nextcloud)
         log "Nextcloud is complex. You can deploy it via docker-compose (not auto-installed by OmVScript)."
-        if command -v whiptail >/dev/null 2>&1; then
+        if command -v whiptail >/dev/null 2>&1 && [ -t 0 ]; then
           whiptail --msgbox "Nextcloud installation is complex — consider using the official docker-compose instructions: https://nextcloud.com/install/#instructions-server" 12 80
         else
           echo "See Nextcloud official docs."
@@ -138,7 +139,7 @@ main(){
   ensure_docker
   while true; do
     interactive_server_search || break
-    if command -v whiptail >/dev/null 2>&1; then
+    if command -v whiptail >/dev/null 2>&1 && [ -t 0 ]; then
       if ! whiptail --yesno "Select more server apps?" 8 50; then break; fi
     else
       read -rp "Select more? [y/N]: " more

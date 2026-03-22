@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
+export TERM=${TERM:-xterm}
 LOGFILE="/var/log/omvscript.log"
 REPO_RAW_BASE="https://raw.githubusercontent.com/Omcodes23/OmVScript/main"
 log(){ echo "$(date --iso-8601=seconds) $*" | tee -a "$LOGFILE"; }
@@ -49,10 +50,10 @@ filter_dev(){
   echo "${matches[@]:-}"
 }
 
-choose_with_whiptail(){ command -v whiptail >/dev/null 2>&1 && whiptail "$@" && return $? || return 1; }
+choose_with_whiptail(){ command -v whiptail >/dev/null 2>&1 && [ -t 0 ] && whiptail "$@" && return $? || return 1; }
 
 interactive_dev_search(){
-  if command -v whiptail >/dev/null 2>&1; then
+  if command -v whiptail >/dev/null 2>&1 && [ -t 0 ]; then
     q=$(whiptail --inputbox "Search dev packages (vscode, python, node). Leave empty to list all." 10 60 "" 3>&1 1>&2 2>&3) || return 1
   else
     read -rp "Search dev packages (empty=all): " q
@@ -69,7 +70,7 @@ interactive_dev_search(){
     checklist+=("${arr[i]}" "${arr[i+1]}" "OFF")
   done
 
-  if command -v whiptail >/dev/null 2>&1; then
+  if command -v whiptail >/dev/null 2>&1 && [ -t 0 ]; then
     sel=$(whiptail --title "Select dev packages" --checklist "Choose one or more dev packages to install" 20 80 12 "${checklist[@]}" 3>&1 1>&2 2>&3) || return 1
   else
     echo "Matches:"
@@ -168,7 +169,7 @@ install_pkg(){
 main(){
   while true; do
     interactive_dev_search || break
-    if command -v whiptail >/dev/null 2>&1; then
+  if command -v whiptail >/dev/null 2>&1 && [ -t 0 ]; then
       whiptail --yesno "Install more dev packages?" 8 50 || break
     else
       read -rp "Install more? [y/N]: " more; [[ "$more" =~ ^[Yy] ]] || break
