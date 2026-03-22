@@ -53,10 +53,17 @@ filter_dev(){
 choose_with_whiptail(){ command -v whiptail >/dev/null 2>&1 && [ -t 0 ] && whiptail "$@" && return $? || return 1; }
 
 interactive_dev_search(){
-  if command -v whiptail >/dev/null 2>&1 && [ -t 0 ]; then
+  if command -v whiptail >/dev/null 2>&1 && ([ -t 0 ] || [ -c /dev/tty ]); then
     q=$(whiptail --inputbox "Search dev packages (vscode, python, node). Leave empty to list all." 10 60 "" 3>&1 1>&2 2>&3) || return 1
   else
-    read -rp "Search dev packages (empty=all): " q
+    if [ -t 0 ]; then
+      read -rp "Search dev packages (empty=all): " q
+    elif [ -c /dev/tty ]; then
+      read -rp "Search dev packages (empty=all): " q </dev/tty
+    else
+      log "No terminal available for input."
+      return 1
+    fi
   fi
 
   mapfile -t arr < <(filter_dev "$q")
@@ -80,7 +87,14 @@ interactive_dev_search(){
       idx_to_tag[$idx]="${arr[i]}"
       ((idx++))
     done
-    read -rp "Enter numbers (space separated) or 'c' to cancel: " -a nums
+    if [ -t 0 ]; then
+      read -rp "Enter numbers (space separated) or 'c' to cancel: " -a nums
+    elif [ -c /dev/tty ]; then
+      read -rp "Enter numbers (space separated) or 'c' to cancel: " -a nums </dev/tty
+    else
+      log "No terminal available for input."
+      return 1
+    fi
     [ "${nums[0]}" = "c" ] && return 1
     seltags=()
     for n in "${nums[@]}"; do seltags+=("${idx_to_tag[$n]}"); done
