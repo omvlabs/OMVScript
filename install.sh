@@ -44,7 +44,7 @@ if ! [ -t 0 ] && ! [ -t 2 ]; then
   exit 1
 fi
 
-if command -v whiptail >/dev/null 2>&1 && [ -t 0 ]; then
+if command -v whiptail >/dev/null 2>&1 && ([ -t 0 ] || [ -c /dev/tty ]); then
   choice=$(whiptail --title "OmVScript" --menu "Choose action" 20 80 12 \
     "1" "Ensure Docker is installed (recommended first)" \
     "2" "Install Developer Environment (search & select packages)" \
@@ -60,11 +60,14 @@ else
   echo "4) NAS Apps (search & deploy)"
   echo "5) Docker Images (manual/custom)"
   echo "6) Exit"
-  if ! [ -t 0 ]; then
-    echo "Error: whiptail not installed and stdin not a terminal. Cannot accept input." >&2
+  if [ -t 0 ]; then
+    read -rp "Enter choice: " choice
+  elif [ -c /dev/tty ]; then
+    read -rp "Enter choice: " choice </dev/tty
+  else
+    echo "Error: whiptail not installed and no terminal available. Cannot accept input." >&2
     exit 1
   fi
-  read -rp "Enter choice: " choice
 fi
 
 case "$choice" in
