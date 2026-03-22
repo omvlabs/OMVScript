@@ -70,7 +70,7 @@ interactive_dev_search(){
     checklist+=("${arr[i]}" "${arr[i+1]}" "OFF")
   done
 
-  if command -v whiptail >/dev/null 2>&1 && [ -t 0 ]; then
+  if command -v whiptail >/dev/null 2>&1 && { [ -t 0 ] || [ -c /dev/tty ]; }; then
     sel=$(whiptail --title "Select dev packages" --checklist "Choose one or more dev packages to install" 20 80 12 "${checklist[@]}" 3>&1 1>&2 2>&3) || return 1
   else
     echo "Matches:"

@@ -70,6 +70,7 @@ else
   fi
 fi
 
+while true; do
 case "$choice" in
   1)
     m=$(fetch_module "modules/docker-check.sh") || exit 1
@@ -92,12 +93,13 @@ case "$choice" in
     run_module "$m"
     ;;
   6)
-    log "Exit chosen"
+    break
     ;;
   *)
     log "Unknown choice"
     ;;
 esac
+done
 
 rm -rf "$TMPDIR"
 log "OmVScript finished."
