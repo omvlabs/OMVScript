@@ -17,7 +17,7 @@ It includes:
 • Auto-start containers on reboot  
 • Curated developer, server, NAS, and Docker environments  
 
-Future Phase → **OmVOS** (your own Linux distribution based on these modules)
+Future Phase -> **OmVOS** (your own Linux distribution based on these modules)
 
 ---
 
@@ -51,7 +51,8 @@ OmVScript/
  │   │   ├─ server-apps.sh (Search-based Server App installer)
  │   │   └─ nas-apps.sh (Search-based NAS App installer)
  │   └─ developer/
- │       └─ dev-packages.sh (Developer environment installer with search)
+ │       ├─ dev-packages.sh (Developer environment installer with search)
+ │       └─ install-dev-env.sh (Developer environment setup script)
  ├─ scripts/
  │   └─ generate-sha256sums.sh (Release checksum generator)
  ├─ .github/
