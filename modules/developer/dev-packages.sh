@@ -14,14 +14,7 @@ detect_pkg_manager(){
 
 PKG=$(detect_pkg_manager)
 
-install_pkg(){
-  case "$PKG" in
-    apt) DEBIAN_FRONTEND=noninteractive apt-get update -y && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends "$@";;
-    dnf) dnf install -y "$@";;
-    pacman) pacman -Syu --noconfirm "$@";;
-    *) echo "Unsupported package manager: $PKG"; return 1;;
-  esac
-}
+# First install_pkg removed - using the one at line 175
 
 # curated dev packages: key|description|install_hint
 read -r -d '' DEV_PACKS <<'EOF' || true
@@ -184,10 +177,17 @@ install_pkg(){
 main(){
   while true; do
     interactive_dev_search || break
-  if command -v whiptail >/dev/null 2>&1 && [ -t 0 ]; then
+  if command -v whiptail >/dev/null 2>&1 && ([ -t 0 ] || [ -c /dev/tty ]); then
       whiptail --yesno "Install more dev packages?" 8 50 || break
     else
-      read -rp "Install more? [y/N]: " more; [[ "$more" =~ ^[Yy] ]] || break
+      if [ -t 0 ]; then
+        read -rp "Install more? [y/N]: " more
+      elif [ -c /dev/tty ]; then
+        read -rp "Install more? [y/N]: " more </dev/tty
+      else
+        break
+      fi
+      [[ "$more" =~ ^[Yy] ]] || break
     fi
   done
   log "Developer packages module finished."

@@ -20,9 +20,9 @@ fetch_module(){
   local url="${REPO_RAW_BASE}/${path}"
   local out
   out="${TMPDIR}/$(basename "$path")"
-  log "Downloading module: $url"
+  log "Downloading module: $url" >&2
   if ! curl -fsSL "$url" -o "$out"; then
-    log "ERROR: failed to download $url"
+    log "ERROR: failed to download $url" >&2
     return 1
   fi
   chmod +x "$out"
