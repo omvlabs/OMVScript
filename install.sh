@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
-export TERM=${TERM:-xterm}
+export TERM=${TERM:-linux}
 # OmVScript: bootstrap installer - updated to include searchable app selection
 # Usage:
 #  curl -fsSL https://raw.githubusercontent.com/Omcodes23/OmVScript/main/install.sh -o /tmp/omvscript-install.sh

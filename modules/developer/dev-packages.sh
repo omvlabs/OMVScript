@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
-export TERM=${TERM:-xterm}
+export TERM=${TERM:-linux}
 LOGFILE="/var/log/omvscript.log"
 REPO_RAW_BASE="https://raw.githubusercontent.com/Omcodes23/OmVScript/main"
 log(){ echo "$(date --iso-8601=seconds) $*" | tee -a "$LOGFILE"; }

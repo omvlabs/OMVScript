@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
-export TERM=${TERM:-xterm}
+export TERM=${TERM:-linux}
 # Server apps module — curated set of server applications; deploy via docker-images module
 LOGFILE="/var/log/omvscript.log"
 REPO_RAW_BASE="https://raw.githubusercontent.com/Omcodes23/OmVScript/main"

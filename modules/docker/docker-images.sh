@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
-export TERM=${TERM:-xterm}
+export TERM=${TERM:-linux}
 # Generic Docker image deployer: choose from curated list or provide custom image
 LOGFILE="/var/log/omvscript.log"
 log(){ echo "$(date --iso-8601=seconds) $*" | tee -a "$LOGFILE"; }
