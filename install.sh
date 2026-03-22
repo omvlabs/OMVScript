@@ -44,7 +44,7 @@ if ! [ -t 0 ] && ! [ -t 2 ]; then
   exit 1
 fi
 
-if command -v whiptail >/dev/null 2>&1 && ([ -t 0 ] || [ -c /dev/tty ]); then
+if command -v whiptail >/dev/null 2>&1 && { [ -t 0 ] || [ -c /dev/tty ]; }; then
   choice=$(whiptail --title "OmVScript" --menu "Choose action" 20 80 12 \
     "1" "Ensure Docker is installed (recommended first)" \
     "2" "Install Developer Environment (search & select packages)" \
