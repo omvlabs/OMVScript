@@ -44,7 +44,7 @@ filter_choices(){
 }
 
 choose_with_whiptail(){
-  if command -v whiptail >/dev/null 2>&1 && [ -t 0 ]; then
+  if command -v whiptail >/dev/null 2>&1 && { [ -t 0 ] || [ -c /dev/tty ]; }; then
     whiptail "$@"
     return $?
   fi
