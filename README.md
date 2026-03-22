@@ -1,6 +1,6 @@
 # OmVScript
 
-OmVScript is a modular, script-first provisioning toolkit created by **Om Vataliya (Omcodes23)**.  
+OmVScript is a modular, script-first provisioning toolkit created by **Om Vataliya (omvlabs)**.  
 It allows any Linux system to be converted into different roles such as:
 
 - Developer Workstation  
@@ -25,29 +25,39 @@ Future Phase → **OmVOS** (your own Linux distribution based on these modules)
 
 Always inspect scripts before running them.
 
-curl -fsSL https://raw.githubusercontent.com/Omcodes23/OmVScript/main/install.sh -o /tmp/omvscript-install.sh  
-less /tmp/omvscript-install.sh  
-sudo bash /tmp/omvscript-install.sh  
+```bash
+curl -fsSL https://raw.githubusercontent.com/omvlabs/OmVScript/main/install.sh -o /tmp/omvscript-install.sh
+less /tmp/omvscript-install.sh
+sudo bash /tmp/omvscript-install.sh
+```
 
 One-line execution (NOT recommended until you inspect):
 
-curl -fsSL https://raw.githubusercontent.com/Omcodes23/OmVScript/main/install.sh | sudo bash
+```bash
+curl -fsSL https://raw.githubusercontent.com/omvlabs/OmVScript/main/install.sh | sudo bash
+```
 
 ---
 
 # 📁 Repo Structure
 
-OmVScript/  
- ├─ install.sh (Main interactive bootstrap installer)  
- ├─ modules/  
- │   ├─ docker/docker-images.sh (Universal Docker image deployer with search + ports)  
- │   ├─ docker-check.sh (Ensures Docker is installed)  
- │   ├─ apps/server-apps.sh (Search-based Server App installer)  
- │   ├─ apps/nas-apps.sh (Search-based NAS App installer)  
- │   └─ developer/dev-packages.sh (Developer environment installer with search)  
- ├─ scripts/generate-sha256sums.sh (Release checksum generator)  
- ├─ .github/workflows/ci.yml (shellcheck, validations, artifact creation)  
- ├─ .gitignore  
+OmVScript/
+ ├─ install.sh (Main interactive bootstrap installer)
+ ├─ modules/
+ │   ├─ docker/
+ │   │   └─ docker-images.sh (Universal Docker image deployer with search + ports)
+ │   ├─ docker-check.sh (Ensures Docker is installed)
+ │   ├─ apps/
+ │   │   ├─ server-apps.sh (Search-based Server App installer)
+ │   │   └─ nas-apps.sh (Search-based NAS App installer)
+ │   └─ developer/
+ │       └─ dev-packages.sh (Developer environment installer with search)
+ ├─ scripts/
+ │   └─ generate-sha256sums.sh (Release checksum generator)
+ ├─ .github/
+ │   └─ workflows/
+ │       └─ ci.yml (shellcheck, validations, artifact creation)
+ ├─ .gitignore
  └─ README.md (this file)
 
 ---
@@ -119,8 +129,7 @@ Example features (conceptually):
 • Containers are not overwritten  
 • No destructive disk operations  
 • NAS systems like OMV and TrueNAS show warnings instead of forcing installs  
-• Everything logs to:  
-  /var/log/omvscript.log  
+• Everything logs to: `/var/log/omvscript.log`
 
 ---
 
@@ -128,16 +137,20 @@ Example features (conceptually):
 
 Main log file:
 
-/var/log/omvscript.log  
+`/var/log/omvscript.log`
 
 If a module fails, you can manually re-run it:
 
-curl -fsSL https://raw.githubusercontent.com/Omcodes23/OmVScript/main/modules/developer/dev-packages.sh -o /tmp/dev.sh  
-sudo bash /tmp/dev.sh  
+```bash
+curl -fsSL https://raw.githubusercontent.com/omvlabs/OmVScript/main/modules/developer/dev-packages.sh -o /tmp/dev.sh
+sudo bash /tmp/dev.sh
+```
 
 Check container logs:
 
+```bash
 docker logs <container-name>
+```
 
 ---
 
