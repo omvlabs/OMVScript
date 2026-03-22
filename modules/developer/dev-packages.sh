@@ -40,10 +40,10 @@ filter_dev(){
       matches+=("$id" "$desc")
     fi
   done
-  echo "${matches[@]:-}"
+  printf '%s\n' "${matches[@]}"
 }
 
-choose_with_whiptail(){ command -v whiptail >/dev/null 2>&1 && [ -t 0 ] && whiptail "$@" && return $? || return 1; }
+choose_with_whiptail(){ command -v whiptail >/dev/null 2>&1 && { [ -t 0 ] || [ -c /dev/tty ]; } && whiptail "$@" && return $? || return 1; }
 
 interactive_dev_search(){
   if command -v whiptail >/dev/null 2>&1 && { [ -t 0 ] || [ -c /dev/tty ]; }; then
