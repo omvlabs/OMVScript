@@ -1,4 +1,4 @@
-# Inirup
+# Initup
 
 OmVScript is a modular, script-first provisioning toolkit created by **Om Vataliya (omvlabs)**.  
 It allows any Linux system to be converted into different roles such as:
